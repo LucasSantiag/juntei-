@@ -6,6 +6,12 @@ import {UserType} from "../models/User";
 const router: Router = express.Router();
 
 /**
+ * Get user
+ * Collection id is the same UID from Firebase Authentication
+ * */
+router.get("/", controller.create);
+
+/**
  * Create user
  * Collection id is the same UID from Firebase Authentication
  * @Body { userType: string }

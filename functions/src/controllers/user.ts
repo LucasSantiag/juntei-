@@ -3,6 +3,17 @@ import * as functions from "firebase-functions";
 import service from "../services/user";
 import {UserRequest} from "../models/User";
 
+const get = async (req: Request, res: Response, next: NextFunction) => {
+  const uid = req.uid!;
+
+  service.find(uid)
+      .then((user) => {
+        functions.logger.log("User get: ", req.uid);
+        res.status(200).send(user.data());
+      })
+      .catch(next);
+};
+
 const create = async (req: Request, res: Response, next: NextFunction) => {
   const userReq = req.body as UserRequest;
   const uid = req.uid!;
@@ -38,6 +49,7 @@ const getRelationshipToken = async (req: Request, res: Response, next: NextFunct
 };
 
 export default {
+  get,
   create,
   update,
   getRelationshipToken,
