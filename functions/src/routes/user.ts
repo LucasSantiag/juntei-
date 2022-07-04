@@ -9,7 +9,7 @@ const router: Router = express.Router();
  * Get user
  * Collection id is the same UID from Firebase Authentication
  * */
-router.get("/", controller.create);
+router.get("/", controller.get);
 
 /**
  * Create user
