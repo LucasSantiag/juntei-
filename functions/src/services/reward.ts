@@ -24,9 +24,7 @@ const getAllRewards = async (uid: string) => {
       .where("deleted", "!=", true)
       .get();
 
-  return rewards.docs.map((reward) => {
-    reward.id, reward.data();
-  });
+  return rewards.docs.map((reward) => Object.assign({}, {"id": reward.id}, reward.data()));
 };
 
 const create = async (uid: string, reward: RewardRequest) => {

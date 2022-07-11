@@ -14,7 +14,7 @@ router.get("/", controller.get);
 /**
  * Create user
  * Collection id is the same UID from Firebase Authentication
- * @Body { userType: string }
+ * @Body { role: string }
  * */
 router.post("/", controller.create);
 
@@ -30,7 +30,7 @@ router.post("/token", roleVerifier(UserType.CHILD), controller.getRelationshipTo
  * Update user
  * @Warn If the user role (PARENT or CHILD) changes, any relationship existent will be DELETED.
  * @Warn All data from a DELETED relationship cannot be accessed.
- * @Body { userType: string }
+ * @Body { role: string }
  * */
 router.put("/", controller.update);
 

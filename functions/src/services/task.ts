@@ -19,9 +19,7 @@ const getAllTasks = async (uid: string) => {
       .where("deleted", "!=", true)
       .get();
 
-  return tasks.docs.map((task) => {
-    task.id, task.data();
-  });
+  return tasks.docs.map((task) => Object.assign({}, {"id": task.id}, task.data()));
 };
 
 const create = async (uid: string, task: TaskRequest) => {
