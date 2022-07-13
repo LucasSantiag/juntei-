@@ -30,7 +30,7 @@ const getAllRewards = async (uid: string) => {
 const create = async (uid: string, reward: RewardRequest) => {
   const relationshipId = (await relationshipService.getRelationshipByUid(uid, true)).ref.id;
 
-  db.rewards
+  return db.rewards
       .add(mapRequestDefault(reward, relationshipId));
 };
 

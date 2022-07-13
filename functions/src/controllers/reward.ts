@@ -19,9 +19,10 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
   const uid = req.uid!;
 
   service.create(uid, reward)
-      .then(() => {
-        functions.logger.log("Reward created: ", reward);
-        res.status(201).send(reward);
+      .then(async (docRef) => {
+        const rewardInserted = (await docRef.get()).data();
+        functions.logger.log("Reward created: ", docRef.id);
+        res.status(201).send(rewardInserted);
       })
       .catch(next);
 };

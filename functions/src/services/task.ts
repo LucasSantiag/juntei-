@@ -25,7 +25,7 @@ const getAllTasks = async (uid: string) => {
 const create = async (uid: string, task: TaskRequest) => {
   const relationshipId = (await relationshipService.getRelationshipByUid(uid, true)).ref.id;
 
-  db.tasks
+  return db.tasks
       .add(mapRequest(task, relationshipId));
 };
 

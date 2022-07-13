@@ -19,9 +19,10 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
   const uid = req.uid!;
 
   service.create(uid, task)
-      .then((tasks) => {
-        functions.logger.log("Task created: ", task);
-        res.status(200).send(tasks);
+      .then(async (docRef) => {
+        const taskInserted = (await docRef.get()).data();
+        functions.logger.log("Task created: ", docRef.id);
+        res.status(200).send(taskInserted);
       })
       .catch(next);
 };
