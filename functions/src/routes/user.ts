@@ -12,6 +12,12 @@ const router: Router = express.Router();
 router.get("/", controller.get);
 
 /**
+ * Get user
+ * Collection id is the same UID from Firebase Authentication
+ * */
+router.get("/childs", roleVerifier(UserType.PARENT), controller.listChilds);
+
+/**
  * Create user
  * Collection id is the same UID from Firebase Authentication
  * @Body { role: string }

@@ -53,6 +53,11 @@ const addRelationship = async (parentUid: string, childToken: string) => {
   const child = (await userService.findByToken(childToken)).ref;
 
   const currentRelationship = await getRelationshipByUid(parentUid, true);
+  const childRelationship = await getRelationshipByUid(child.id, true);
+
+  if (childRelationship) {
+    deleteRelationship(child.id);
+  }
 
   const relationship: UserRelationship = {
     parent: parentUid,

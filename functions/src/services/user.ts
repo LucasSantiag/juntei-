@@ -17,6 +17,19 @@ const find = async (uid: string) => {
   return user;
 };
 
+const findChilds = async (uid: string) => {
+  const yolo = (await userRelationshipService.getRelationshipByUid(uid)).ref.get();
+
+  const childs = (await yolo).data()?.childs?.map(async (id) => {
+    return (await db.users
+        .doc(uid)
+        .get())
+        .data();
+  });
+
+  return childs;
+};
+
 const findByToken = async (token: string) => {
   const users = await db.users
       .where("token.tokenId", "==", token)
@@ -47,8 +60,6 @@ const update = async (userReq: UserRequest, uid: string) => {
 };
 
 const token = async (uid: string) => {
-  userRelationshipService.deleteRelationship(uid);
-
   const relationshipToken = shortid.generate();
   const token = mapToken(relationshipToken);
 
@@ -72,4 +83,5 @@ export default {
   findByToken,
   find,
   updateTokenStatus,
+  findChilds,
 };

@@ -14,6 +14,17 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       .catch(next);
 };
 
+const listChilds = async (req: Request, res: Response, next: NextFunction) => {
+  const uid = req.uid!;
+
+  service.findChilds(uid)
+      .then((childs) => {
+        functions.logger.log("Childs from parent: ", req.uid);
+        res.status(200).send(childs);
+      })
+      .catch(next);
+};
+
 const create = async (req: Request, res: Response, next: NextFunction) => {
   const userReq = req.body as UserRequest;
   const uid = req.uid!;
@@ -53,4 +64,5 @@ export default {
   create,
   update,
   getRelationshipToken,
+  listChilds,
 };

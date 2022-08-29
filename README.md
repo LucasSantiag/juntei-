@@ -4,3 +4,9 @@ Backend serverless with NodeJs (Typescript) and Firebase.
 
 ## Todo
  - Better docs;
+ESCALAÇÃO
+FILHO ATUALIZAR STATUS
+O PAI CONFIRMA OU NEGA
+ATUALIZA O SALDO DO MULEKE
+LISTAGEM DE FILHOS
+RESGATE E HISTORICO DE PREMIOS
