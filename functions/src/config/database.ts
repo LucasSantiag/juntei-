@@ -21,5 +21,5 @@ export const db = {
   users: getFirestore().collection("users").withConverter(userConverter()),
   usersRelationshipToken: getFirestore().collection("users-relationship").withConverter(converter<UserRelationship>()),
   rewards: getFirestore().collection("rewards").withConverter(converter<Reward>()),
-  tasks: getFirestore().collection("rewards").withConverter(converter<Task>()),
+  tasks: getFirestore().collection("tasks").withConverter(converter<Task>()),
 };

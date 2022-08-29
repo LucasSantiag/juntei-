@@ -1,13 +1,13 @@
 export interface TaskRequest {
   description: string,
   icon: string,
-  points: number,
+  price: number,
 }
 
 export interface Task {
   relationshipId: string,
   description: string,
   icon: string,
-  points: number,
+  price: number,
   deleted: boolean,
 }

@@ -20,7 +20,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
   service.create(uid, task)
       .then(async (docRef) => {
-        const taskInserted = (await docRef.get()).data();
+        const taskInserted = Object.assign({}, {"id": docRef.id}, (await docRef.get()).data());
         functions.logger.log("Task created: ", docRef.id);
         res.status(200).send(taskInserted);
       })

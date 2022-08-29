@@ -20,7 +20,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
   service.create(uid, reward)
       .then(async (docRef) => {
-        const rewardInserted = (await docRef.get()).data();
+        const rewardInserted = Object.assign({}, {"id": docRef.id}, (await docRef.get()).data());
         functions.logger.log("Reward created: ", docRef.id);
         res.status(201).send(rewardInserted);
       })

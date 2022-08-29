@@ -12,6 +12,7 @@ export const mapRequest = (taskReq: TaskRequest, relationshipId: string) => {
     relationshipId: relationshipId,
     description: taskReq.description,
     icon: taskReq.icon,
+    price: taskReq.price,
     deleted: false,
   } as Task;
 };
