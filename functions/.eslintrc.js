@@ -30,5 +30,6 @@ module.exports = {
     "linebreak-style": 0,
     "new-cap": 0,
     "max-len": 0,
+    "no-non-null-assertion": 0,
   },
 };

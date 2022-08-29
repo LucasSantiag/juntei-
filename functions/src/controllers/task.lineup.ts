@@ -1,22 +1,40 @@
 import {NextFunction, Request, Response} from "express";
 
-const getAllLineups = async (req: Request, res: Response, next: NextFunction) => {}
+const getAllLineups = (req: Request, res: Response, next: NextFunction) => {
+  console.log("");
+};
 
-const get = async (req: Request, res: Response, next: NextFunction) => {};
+const get = (req: Request, res: Response, next: NextFunction) => {
+  console.log("");
+};
 
-const getCurrentLineups = async (req: Request, res: Response, next: NextFunction) => {};
+const getCurrentLineups = (req: Request, res: Response, next: NextFunction) => {
+  console.log("");
+};
 
-const getNextLineup = async (req: Request, res: Response, next: NextFunction) => {};
+const getNextLineup = (req: Request, res: Response, next: NextFunction) => {
+  console.log("");
+};
 
-const getPreviousLineup = async (req: Request, res: Response, next: NextFunction) => {};
+const getPreviousLineup = (req: Request, res: Response, next: NextFunction) => {
+  console.log("");
+};
 
-const create = async (req: Request, res: Response, next: NextFunction) => {};
+const create = (req: Request, res: Response, next: NextFunction) => {
+  console.log("");
+};
 
-const update = async (req: Request, res: Response, next: NextFunction) => {};
+const update = (req: Request, res: Response, next: NextFunction) => {
+  console.log("");
+};
 
-const approve = async (req: Request, res: Response, next: NextFunction) => {};
+const approve = (req: Request, res: Response, next: NextFunction) => {
+  console.log("");
+};
 
-const decline = async (req: Request, res: Response, next: NextFunction) => {};
+const decline = (req: Request, res: Response, next: NextFunction) => {
+  console.log("");
+};
 
 export default {
   getAllLineups,
