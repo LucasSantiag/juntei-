@@ -16,10 +16,18 @@ export interface Token {
 }
 
 export interface UserRequest {
+  name: string,
+  avatar: string,
+  position: string,
+  team: string,
   role: UserType,
 }
 
 export interface User {
+  name: string,
+  avatar: string,
+  position: string,
+  team: string,
   role: UserType,
   balance: number,
   token: Token,

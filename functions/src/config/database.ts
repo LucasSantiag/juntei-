@@ -1,6 +1,7 @@
 import {getFirestore} from "firebase-admin/firestore";
 import {Reward} from "../models/Reward";
 import {Task} from "../models/Task";
+import {TaskLineupRelation} from "../models/Task.Lineup";
 import {User} from "../models/User";
 import {UserRelationship} from "../models/User.Relationship";
 
@@ -22,4 +23,5 @@ export const db = {
   usersRelationshipToken: getFirestore().collection("users-relationship").withConverter(converter<UserRelationship>()),
   rewards: getFirestore().collection("rewards").withConverter(converter<Reward>()),
   tasks: getFirestore().collection("tasks").withConverter(converter<Task>()),
+  taskLineup: getFirestore().collection("task-lineup").withConverter(converter<TaskLineupRelation>()),
 };

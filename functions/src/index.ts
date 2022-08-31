@@ -11,6 +11,7 @@ import userRoute from "./routes/user";
 import userRelationshipRoute from "./routes/user.relationship";
 import rewardRoute from "./routes/reward";
 import taskRoute from "./routes/task";
+import taskLineupRoute from "./routes/task.lineup";
 
 const app: Express = express();
 
@@ -21,6 +22,8 @@ app.use("/user", userRoute);
 app.use("/relationship", userRelationshipRoute);
 app.use("/reward", rewardRoute);
 app.use("/task", taskRoute);
+app.use("/lineup", taskLineupRoute);
+
 app.use(errorHandler);
 
 exports.app = functions.https.onRequest(app);

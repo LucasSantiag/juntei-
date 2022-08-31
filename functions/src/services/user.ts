@@ -1,6 +1,6 @@
 import {TokenStatus, UserRequest} from "../models/User";
 import {db} from "../config/database";
-import {checkUser, checkUsersByToken, mapRequest, mapToken} from "../utils/user.utils";
+import {checkUser, checkUsersByToken, mapRequest, mapToken, mapUserList} from "../utils/user.utils";
 import userRelationshipService from "../services/user.relationship";
 import * as shortid from "shortid";
 
@@ -18,16 +18,20 @@ const find = async (uid: string) => {
 };
 
 const findChilds = async (uid: string) => {
-  const yolo = (await userRelationshipService.getRelationshipByUid(uid)).ref.get();
+  const relationship = await (await userRelationshipService.getRelationshipByUid(uid)).ref.get();
 
-  const childs = (await yolo).data()?.childs?.map(async (id) => {
-    return (await db.users
-        .doc(uid)
-        .get())
-        .data();
+  // Todo: Parent childless
+
+  const childs = relationship.data()!.childs!.map(async (id)=> {
+    const usr = db.users
+        .doc(id)
+        .get();
+    return usr.then((user) => {
+      return mapUserList(user);
+    });
   });
 
-  return childs;
+  return await Promise.all(childs);
 };
 
 const findByToken = async (token: string) => {

@@ -8,7 +8,7 @@ const router: Router = express.Router();
 /**
  * Get all lineups
  */
-router.get("/", controller.getAllLineups);
+router.get("/{id}", controller.getAllLineups);
 
 /**
  * Get id lineup

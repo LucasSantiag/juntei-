@@ -78,3 +78,15 @@ export class InvalidTokenError extends BaseError {
   }
 }
 
+/**
+ * CustomError class Lineup wrong insertions
+ */
+export class LineupAlreadyExists extends BaseError {
+  /**
+   * Lineup Error error constructor
+   */
+  constructor() {
+    super("LINEUP ALREADY EXISTS", HttpStatusCode.BAD_REQUEST, "Entity already exists");
+  }
+}
+

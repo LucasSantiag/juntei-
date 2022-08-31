@@ -31,8 +31,20 @@ export const checkUsersByToken = (users: FirebaseFirestore.QuerySnapshot<User>) 
   }
 };
 
+export const mapUserList = (user: FirebaseFirestore.DocumentSnapshot<User>) => {
+  return Object.assign({}, {
+    "id": user.id,
+    "name": user.data()?.name,
+    "balance": user.data()?.balance,
+  });
+};
+
 export const mapRequest = (req: UserRequest, balance = 0) => {
   return {
+    name: req.name,
+    avatar: req.avatar,
+    position: req.position,
+    team: req.team,
     role: checkEnumUserType(req.role),
     balance: balance,
   } as User;
