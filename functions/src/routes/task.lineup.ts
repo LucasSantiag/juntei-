@@ -43,7 +43,7 @@ router.post("/next", roleVerifier(UserType.CHILD), controller.create);
  * @Body
  * @Params
  */
-router.put("/next", roleVerifier(UserType.CHILD), controller.update);
+router.put("/next", roleVerifier(UserType.CHILD), controller.updateLineup);
 
 /**
  * Update a task
@@ -51,7 +51,7 @@ router.put("/next", roleVerifier(UserType.CHILD), controller.update);
  * @Body
  * @Params
  */
-router.put("/current/{id}", roleVerifier(UserType.CHILD), controller.update);
+router.put("/current", roleVerifier(UserType.CHILD), controller.updateTask);
 
 /**
  * Update a Reward

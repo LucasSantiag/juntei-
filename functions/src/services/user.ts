@@ -20,7 +20,9 @@ const find = async (uid: string) => {
 const findChilds = async (uid: string) => {
   const relationship = await (await userRelationshipService.getRelationshipByUid(uid)).ref.get();
 
-  // Todo: Parent childless
+  if (relationship.data()?.childs?.length == 0) {
+    return [{}];
+  }
 
   const childs = relationship.data()!.childs!.map(async (id)=> {
     const usr = db.users

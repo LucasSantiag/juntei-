@@ -20,9 +20,6 @@ export interface TaskLineup {
 
 export interface TaskRequest {
   taskId: string,
-  description: string,
-  mediaUrl: string,
-  status: TaskStatus,
 }
 
 export interface ConcludeRequest {

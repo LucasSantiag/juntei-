@@ -1,7 +1,7 @@
 import {db} from "../config/database";
 import {LineupAlreadyExists} from "../models/Error";
-import {TaskLineupRequest} from "../models/Task.Lineup";
-import {mapRequest, getWeek} from "../utils/task.lineup";
+import {ConcludeRequest, TaskLineupRequest} from "../models/Task.Lineup";
+import {mapRequest, getWeek, mapConclusion} from "../utils/task.lineup";
 
 const findNextWeek = async (uid: string) => {
   const date = new Date;
@@ -13,15 +13,29 @@ const findNextWeek = async (uid: string) => {
       .get();
 };
 
-const update = async (req: TaskLineupRequest, uid: string) => {
-  //  Todo: FIX
+const findCurrentWeek = async (uid: string) => {
   const date = new Date;
-  date.setDate(date.getDate() + 7);
 
   return db.taskLineup
       .where("childId", "==", uid)
       .where("week", "==", getWeek(date))
       .get();
+};
+
+const updateLineup = async (req: TaskLineupRequest, uid: string) => {
+  const lineup = await findNextWeek(uid);
+
+  return lineup.docs[0]
+    .ref
+    .update(req);
+};
+
+const updateTask = async (req: ConcludeRequest, uid: string) => {
+  const lineup = await findCurrentWeek(uid);
+
+  return lineup.docs[0]
+    .ref
+    .update(mapConclusion(req, lineup.docs[0].data()));
 };
 
 const create = async (req: TaskLineupRequest, uid: string) => {
@@ -39,5 +53,6 @@ const create = async (req: TaskLineupRequest, uid: string) => {
 export default {
   findNextWeek,
   create,
-  update,
+  updateLineup,
+  updateTask,
 };

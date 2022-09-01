@@ -1,7 +1,7 @@
 import {startOfWeek, endOfWeek} from "date-fns";
 import shortid from "shortid";
 import {MalformedBodyError} from "../models/Error";
-import {TaskLineup, TaskLineupRelation, TaskLineupRequest, TaskRequest, TaskStatus, Week} from "../models/Task.Lineup";
+import {ConcludeRequest, TaskLineup, TaskLineupRelation, TaskLineupRequest, TaskRequest, TaskStatus, Week} from "../models/Task.Lineup";
 
 export const checkEnumTaskStatus = (u: string) => {
   if (!Object.values(TaskStatus).includes(u as TaskStatus)) {
@@ -31,8 +31,25 @@ export const mapTaskRequest = (req: TaskRequest) => {
   return {
     "id": shortid.generate(),
     "taskId": req.taskId,
-    "description": req.description,
-    "mediaUrl": req.mediaUrl,
-    "status": checkEnumTaskStatus(req.status),
   } as TaskLineup;
+};
+
+export const mapConclusion = (req: ConcludeRequest, q: TaskLineupRelation) => {
+  const childs = q.taskLineup?.map((i) => {
+    if (i.taskId == req.taskId){
+      return {
+        "taskId": req.taskId,
+        "description": req.description,
+        "mediaUrl": req.mediaUrl,
+      };
+    }
+    else {
+      return i;
+    }
+  });
+  return {
+    "childId": q.childId,
+    "week": q.week,
+    "taskLineup": childs,
+  } as TaskLineupRelation;
 };

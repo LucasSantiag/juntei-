@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import * as functions from "firebase-functions";
-import {TaskLineupRequest} from "../models/Task.Lineup";
+import {ConcludeRequest, TaskLineupRequest} from "../models/Task.Lineup";
 import service from "../services/task.lineup";
 
 const getAllLineups = (req: Request, res: Response, next: NextFunction) => {
@@ -35,11 +35,23 @@ const create = (req: Request, res: Response, next: NextFunction) => {
       .catch(next);
 };
 
-const update = (req: Request, res: Response, next: NextFunction) => {
+const updateLineup = (req: Request, res: Response, next: NextFunction) => {
   const userReq = req.body as TaskLineupRequest;
   const uid = req.uid!;
 
-  service.update(userReq, uid)
+  service.updateLineup(userReq, uid)
+      .then((taskLineup) => {
+        functions.logger.log("TaskLineup created: ", req.uid);
+        res.status(200).send(taskLineup);
+      })
+      .catch(next);
+};
+
+const updateTask = (req: Request, res: Response, next: NextFunction) => {
+  const userReq = req.body as ConcludeRequest;
+  const uid = req.uid!;
+
+  service.updateTask(userReq, uid)
       .then((taskLineup) => {
         functions.logger.log("TaskLineup created: ", req.uid);
         res.status(200).send(taskLineup);
@@ -62,7 +74,8 @@ export default {
   getNextLineup,
   getPreviousLineup,
   create,
-  update,
+  updateLineup,
+  updateTask,
   approve,
   decline,
 };
