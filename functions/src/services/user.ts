@@ -2,6 +2,7 @@ import {TokenStatus, UserRequest} from "../models/User";
 import {db} from "../config/database";
 import {checkUser, checkUsersByToken, mapRequest, mapToken, mapUserList} from "../utils/user.utils";
 import userRelationshipService from "../services/user.relationship";
+import taskLineupService from "../services/task.lineup";
 import * as shortid from "shortid";
 
 /**
@@ -28,8 +29,10 @@ const findChilds = async (uid: string) => {
     const usr = db.users
         .doc(id)
         .get();
+    const approvedBalance = await taskLineupService.getCurrentWeekApprovedBalance(uid);
+    const totalBalance = await taskLineupService.getCurrentWeekTotalBalance(uid);
     return usr.then((user) => {
-      return mapUserList(user);
+      return mapUserList(user, approvedBalance, totalBalance);
     });
   });
 

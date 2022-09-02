@@ -31,11 +31,15 @@ export const checkUsersByToken = (users: FirebaseFirestore.QuerySnapshot<User>) 
   }
 };
 
-export const mapUserList = (user: FirebaseFirestore.DocumentSnapshot<User>) => {
+export const mapUserList = (user: FirebaseFirestore.DocumentSnapshot<User>, approvedBalance: number, totalBalance: number) => {
   return Object.assign({}, {
     "id": user.id,
     "name": user.data()?.name,
-    "balance": user.data()?.balance,
+    "avatar": user.data()?.avatar,
+    "team": user.data()?.team,
+    "position": user.data()?.position,
+    "totalBalance": totalBalance,
+    "approvedBalance": approvedBalance,
   });
 };
 

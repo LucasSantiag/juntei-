@@ -1,7 +1,95 @@
 import {db} from "../config/database";
 import {LineupAlreadyExists} from "../models/Error";
-import {ConcludeRequest, TaskLineupRequest} from "../models/Task.Lineup";
-import {mapRequest, getWeek, mapConclusion} from "../utils/task.lineup";
+import {ConcludeRequest, TaskLineup, TaskLineupRequest, TaskStatus} from "../models/Task.Lineup";
+import {mapRequest, getWeek, mapConclusion, mapTaskList, checkTask, approveById, declienById} from "../utils/task.lineup";
+
+const findById = async (uid: string, id: string) => {
+  const lineup = await db.taskLineup
+      .doc(id)
+      .get();
+
+  checkTask(lineup);
+  return lineup;
+};
+
+const findById2 = async (uid: string, id: string) => {
+  let lineup: any = await findById(uid, id);
+
+  const taskList = lineup.data()!.taskLineup!.map(async (id: TaskLineup)=> {
+    const task = db.tasks
+        .doc(id.taskId)
+        .get();
+    return task.then((tsk) => {
+      return mapTaskList(tsk, id);
+    });
+  });
+
+  lineup = lineup.data();
+  lineup.taskLineup = await Promise.all(taskList);
+
+  return lineup;
+};
+
+const findAllLineups = async (uid: string) => {
+  const lineup = await db.taskLineup
+      .where("childId", "==", uid)
+      .get();
+
+  return lineup.docs.map((data) => {
+    return Object.assign({}, {"id": data.ref.id}, data.data());
+  });
+};
+
+const findPreviousWeek2 = async (uid: string) => {
+  const date = new Date;
+  date.setDate(date.getDate() - 7);
+
+  let lineup: any = (await db.taskLineup
+      .where("childId", "==", uid)
+      .where("week", "==", getWeek(date))
+      .get())
+      .docs[0];
+
+  const taskList = await lineup.data()!.taskLineup!.map(async (id: TaskLineup)=> {
+    const task = db.tasks
+        .doc(id.taskId)
+        .get();
+    return task.then((tsk) => {
+      return mapTaskList(tsk, id);
+    });
+  });
+
+  lineup = lineup.data();
+  lineup.taskLineup = await Promise.all(taskList);
+
+  return lineup;
+};
+
+const findNextWeek2 = async (uid: string) => {
+  const date = new Date;
+  date.setDate(date.getDate() + 7);
+
+  let lineup: any = (await db.taskLineup
+      .where("childId", "==", uid)
+      .where("week", "==", getWeek(date))
+      .get())
+      .docs[0];
+
+  const taskList = await lineup.data()!.taskLineup!.map(async (id: TaskLineup)=> {
+    const task = db.tasks
+        .doc(id.taskId)
+        .get();
+    return task.then((tsk) => {
+      return mapTaskList(tsk, id);
+    });
+  });
+
+  lineup = lineup.data();
+  lineup.taskLineup = await Promise.all(taskList);
+
+  return lineup;
+};
+
 
 const findNextWeek = async (uid: string) => {
   const date = new Date;
@@ -22,20 +110,44 @@ const findCurrentWeek = async (uid: string) => {
       .get();
 };
 
+const findCurrentWeek2 = async (uid: string) => {
+  const date = new Date;
+
+  let lineup: any = (await db.taskLineup
+      .where("childId", "==", uid)
+      .where("week", "==", getWeek(date))
+      .get())
+      .docs[0];
+
+  const taskList = await lineup.data()!.taskLineup!.map(async (id: TaskLineup)=> {
+    const task = db.tasks
+        .doc(id.taskId)
+        .get();
+    return task.then((tsk) => {
+      return mapTaskList(tsk, id);
+    });
+  });
+
+  lineup = lineup.data();
+  lineup.taskLineup = await Promise.all(taskList);
+
+  return lineup;
+};
+
 const updateLineup = async (req: TaskLineupRequest, uid: string) => {
   const lineup = await findNextWeek(uid);
 
   return lineup.docs[0]
-    .ref
-    .update(req);
+      .ref
+      .update(req);
 };
 
 const updateTask = async (req: ConcludeRequest, uid: string) => {
   const lineup = await findCurrentWeek(uid);
 
   return lineup.docs[0]
-    .ref
-    .update(mapConclusion(req, lineup.docs[0].data()));
+      .ref
+      .update(mapConclusion(req, lineup.docs[0].data()));
 };
 
 const create = async (req: TaskLineupRequest, uid: string) => {
@@ -50,9 +162,64 @@ const create = async (req: TaskLineupRequest, uid: string) => {
       .create(mapRequest(req, uid));
 };
 
+const approve = async (uid: string, id: string, weekId: string) => {
+  const lineup = await findById(uid, weekId);
+
+  return lineup.ref.update({
+    taskLineup: approveById(lineup, id),
+  });
+};
+
+const decline = async (uid: string, id: string, weekId: string) => {
+  const lineup = await findById(uid, weekId);
+
+  return lineup.ref.update({
+    taskLineup: declienById(lineup, id),
+  });
+};
+
+const getCurrentWeekTotalBalance = async (uid: string) => {
+  const week = await findCurrentWeek2(uid);
+
+  if (week == undefined) {
+    return 0;
+  }
+
+  return week.taskLineup.reduce((current: number, task: { price: number; }) => {
+    return current + task.price;
+  }, 0);
+};
+
+const getCurrentWeekApprovedBalance = async (uid: string) => {
+  const week = await findCurrentWeek2(uid);
+
+  if (week == undefined) {
+    return 0;
+  }
+
+  return week.taskLineup.reduce((current: number, task: { price: number, status: TaskStatus; } ) => {
+    if (task.status == TaskStatus.APPROVED) {
+      return current + task.price;
+    } else {
+      return current;
+    }
+  }, 0);
+};
+
 export default {
   findNextWeek,
+  findCurrentWeek,
+  findCurrentWeek2,
+  findNextWeek2,
+  findById2,
+  findPreviousWeek2,
+  findAllLineups,
   create,
   updateLineup,
   updateTask,
+  findById,
+  approve,
+  decline,
+  getCurrentWeekTotalBalance,
+  getCurrentWeekApprovedBalance,
 };

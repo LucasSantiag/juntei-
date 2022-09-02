@@ -1,6 +1,7 @@
 import {startOfWeek, endOfWeek} from "date-fns";
 import shortid from "shortid";
-import {MalformedBodyError} from "../models/Error";
+import {MalformedBodyError, NotFoundError} from "../models/Error";
+import {Task} from "../models/Task";
 import {ConcludeRequest, TaskLineup, TaskLineupRelation, TaskLineupRequest, TaskRequest, TaskStatus, Week} from "../models/Task.Lineup";
 
 export const checkEnumTaskStatus = (u: string) => {
@@ -23,7 +24,9 @@ export const mapRequest = (req: TaskLineupRequest, uid: string) => {
   return {
     "childId": uid,
     "week": getWeek(date),
-    "taskLineup": req.taskLineup,
+    "taskLineup": req.taskLineup?.map((x) => {
+      return mapTaskRequest(x);
+    }),
   } as TaskLineupRelation;
 };
 
@@ -36,14 +39,14 @@ export const mapTaskRequest = (req: TaskRequest) => {
 
 export const mapConclusion = (req: ConcludeRequest, q: TaskLineupRelation) => {
   const childs = q.taskLineup?.map((i) => {
-    if (i.taskId == req.taskId){
+    if (i.taskId == req.taskId) {
       return {
         "taskId": req.taskId,
         "description": req.description,
         "mediaUrl": req.mediaUrl,
+        "status": TaskStatus.DONE,
       };
-    }
-    else {
+    } else {
       return i;
     }
   });
@@ -52,4 +55,55 @@ export const mapConclusion = (req: ConcludeRequest, q: TaskLineupRelation) => {
     "week": q.week,
     "taskLineup": childs,
   } as TaskLineupRelation;
+};
+
+export const mapTaskList = (task: FirebaseFirestore.DocumentSnapshot<Task>, taskLineup: TaskLineup) => {
+  return Object.assign({}, {
+    "id": taskLineup.id,
+    "taskId": task.id,
+    "status": taskLineup.status,
+    "mediaUrl": taskLineup.mediaUrl,
+    "description": taskLineup.description,
+    "icon": task.data()?.icon,
+    "price": task.data()?.price,
+    "taskDescription": task.data()?.description,
+  });
+};
+
+export const checkTask = (taskLineup: FirebaseFirestore.DocumentSnapshot<TaskLineupRelation>) => {
+  if (!taskLineup.data()) {
+    throw new NotFoundError();
+  }
+};
+
+export const approveById = (taskLineup: FirebaseFirestore.DocumentSnapshot<TaskLineupRelation>, id: string) => {
+  return taskLineup.data()!.taskLineup!.map((taskId) => {
+    if (id == taskId.id) {
+      return {
+        id: taskId.id,
+        taskId: taskId.taskId,
+        status: TaskStatus.APPROVED,
+        description: taskId.description,
+        mediaUrl: taskId.mediaUrl,
+      };
+    } else {
+      return taskId;
+    }
+  });
+};
+
+export const declienById = (taskLineup: FirebaseFirestore.DocumentSnapshot<TaskLineupRelation>, id: string) => {
+  return taskLineup.data()!.taskLineup!.map((taskId) => {
+    if (id == taskId.id) {
+      return {
+        id: taskId.id,
+        taskId: taskId.taskId,
+        status: TaskStatus.DECLINED,
+        description: taskId.description,
+        mediaUrl: taskId.mediaUrl,
+      };
+    } else {
+      return taskId;
+    }
+  });
 };
