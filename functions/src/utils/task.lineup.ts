@@ -1,4 +1,4 @@
-import {startOfWeek, endOfWeek} from "date-fns";
+import {startOfWeek, endOfWeek, formatISO} from "date-fns";
 import shortid from "shortid";
 import {MalformedBodyError, NotFoundError} from "../models/Error";
 import {Task} from "../models/Task";
@@ -13,8 +13,8 @@ export const checkEnumTaskStatus = (u: string) => {
 
 export const getWeek = (date: Date) => {
   return {
-    start: startOfWeek(date, {weekStartsOn: 1}),
-    end: endOfWeek(date, {weekStartsOn: 1}),
+    start: formatISO(startOfWeek(date, {weekStartsOn: 1})),
+    end: formatISO(endOfWeek(date, {weekStartsOn: 1})),
   } as Week;
 };
 
@@ -34,14 +34,17 @@ export const mapTaskRequest = (req: TaskRequest) => {
   return {
     "id": shortid.generate(),
     "taskId": req.taskId,
+    "position": req.position,
   } as TaskLineup;
 };
 
 export const mapConclusion = (req: ConcludeRequest, q: TaskLineupRelation) => {
   const childs = q.taskLineup?.map((i) => {
-    if (i.taskId == req.taskId) {
+    if (i.id == req.taskId) {
       return {
-        "taskId": req.taskId,
+        "id": i.id,
+        "taskId": i.taskId,
+        "position": i.position,
         "description": req.description,
         "mediaUrl": req.mediaUrl,
         "status": TaskStatus.DONE,
@@ -64,6 +67,7 @@ export const mapTaskList = (task: FirebaseFirestore.DocumentSnapshot<Task>, task
     "status": taskLineup.status,
     "mediaUrl": taskLineup.mediaUrl,
     "description": taskLineup.description,
+    "position": taskLineup.position,
     "icon": task.data()?.icon,
     "price": task.data()?.price,
     "taskDescription": task.data()?.description,

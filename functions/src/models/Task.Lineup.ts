@@ -6,13 +6,14 @@ export enum TaskStatus {
 }
 
 export interface Week {
-  start: Date,
-  end: Date,
+  start: string,
+  end: string,
 }
 
 export interface TaskLineup {
   id: string,
   taskId: string,
+  position: number,
   status: TaskStatus,
   description: string,
   mediaUrl: string,
@@ -20,6 +21,7 @@ export interface TaskLineup {
 
 export interface TaskRequest {
   taskId: string,
+  position: number,
 }
 
 export interface ConcludeRequest {

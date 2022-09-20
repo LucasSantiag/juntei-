@@ -1,5 +1,6 @@
 import {Token, TokenStatus, User, UserRequest, UserType} from "../models/User";
 import {APIError, NotFoundError, MalformedBodyError, InvalidTokenError} from "../models/Error";
+import {TaskLineupRelation} from "../models/Task.Lineup";
 
 export const checkUser = (user: FirebaseFirestore.DocumentSnapshot<User>) => {
   if (!user.data()) {
@@ -31,13 +32,14 @@ export const checkUsersByToken = (users: FirebaseFirestore.QuerySnapshot<User>) 
   }
 };
 
-export const mapUserList = (user: FirebaseFirestore.DocumentSnapshot<User>, approvedBalance: number, totalBalance: number) => {
+export const mapUserList = (user: FirebaseFirestore.DocumentSnapshot<User>, approvedBalance: number, totalBalance: number, lineup: TaskLineupRelation) => {
   return Object.assign({}, {
     "id": user.id,
     "name": user.data()?.name,
     "avatar": user.data()?.avatar,
     "team": user.data()?.team,
     "position": user.data()?.position,
+    "lineup": lineup,
     "totalBalance": totalBalance,
     "approvedBalance": approvedBalance,
   });

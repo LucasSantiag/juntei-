@@ -11,11 +11,6 @@ const router: Router = express.Router();
 router.get("/", controller.getAllLineups);
 
 /**
- * Get id lineup
- */
-router.get("/:id", controller.get);
-
-/**
  * Get current lineup
  */
 router.get("/current", controller.getCurrentLineup);
@@ -29,6 +24,11 @@ router.get("/next", controller.getNextLineup);
  * Get previous lineup
  */
 router.get("/previous", controller.getPreviousLineup);
+
+/**
+ * Get id lineup
+ */
+router.get("/:id", controller.get);
 
 /**
  * Create a new Lineup

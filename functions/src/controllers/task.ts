@@ -52,9 +52,22 @@ const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
       .catch(next);
 };
 
+const redeemReward = async (req: Request, res: Response, next: NextFunction) => {
+  const uid = req.uid!;
+  const id = req.params.id;
+
+  service.redeemReward(uid, id)
+      .then(() => {
+        res.sendStatus(204);
+      })
+      .catch(next);
+};
+
+
 export default {
   getAllTasks,
   create,
   update,
   deleteTask,
+  redeemReward,
 };

@@ -29,10 +29,11 @@ const findChilds = async (uid: string) => {
     const usr = db.users
         .doc(id)
         .get();
+    const lineup = await taskLineupService.findCurrentWeek2(uid);
     const approvedBalance = await taskLineupService.getCurrentWeekApprovedBalance(uid);
     const totalBalance = await taskLineupService.getCurrentWeekTotalBalance(uid);
     return usr.then((user) => {
-      return mapUserList(user, approvedBalance, totalBalance);
+      return mapUserList(user, approvedBalance, totalBalance, lineup);
     });
   });
 
@@ -85,6 +86,14 @@ const updateTokenStatus = async (uid: string, status: TokenStatus) => {
       });
 };
 
+const updateBalance = async (uid: string, balance: number) => {
+  const user = await find(uid);
+  return user.ref
+      .update({
+        balance: {balance: !user.data()?.balance ? balance : balance + user.data()?.balance!},
+      });
+};
+
 export default {
   create,
   update,
@@ -93,4 +102,5 @@ export default {
   find,
   updateTokenStatus,
   findChilds,
+  updateBalance,
 };
