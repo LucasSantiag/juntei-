@@ -29,9 +29,9 @@ const findChilds = async (uid: string) => {
     const usr = db.users
         .doc(id)
         .get();
-    const lineup = await taskLineupService.findCurrentWeek2(uid);
-    const approvedBalance = await taskLineupService.getCurrentWeekApprovedBalance(uid);
-    const totalBalance = await taskLineupService.getCurrentWeekTotalBalance(uid);
+    const lineup = await taskLineupService.findCurrentWeek2(id);
+    const approvedBalance = await taskLineupService.getCurrentWeekApprovedBalance(id);
+    const totalBalance = await taskLineupService.getCurrentWeekTotalBalance(id);
     return usr.then((user) => {
       return mapUserList(user, approvedBalance, totalBalance, lineup);
     });

@@ -2,7 +2,6 @@ import {TaskRequest} from "../models/Task";
 import {db} from "../config/database";
 import relationshipService from "../services/user.relationship";
 import {mapRequest, checkTask} from "../utils/task.utils";
-import userService from "../services/user";
 
 const getById = async (id: string, uid: string) => {
   const relationshipId = (await relationshipService.getRelationshipByUid(uid)).ref.id;
@@ -44,16 +43,9 @@ const deleteTask = async (id: string, uid: string) => {
       .ref.update({deleted: true});
 };
 
-const redeemReward = async (id: string, uid: string) => {
-  const taskDb = await getById(id, uid);
-
-  await userService.updateBalance(uid, 0 - taskDb.data()?.price!);
-};
-
 export default {
   getAllTasks,
   create,
   update,
   deleteTask,
-  redeemReward,
 };

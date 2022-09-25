@@ -32,5 +32,10 @@ router.put("/:id", roleVerifier(UserType.PARENT), controller.update);
  */
 router.delete("/:id", roleVerifier(UserType.PARENT), controller.deleteReward);
 
+/**
+ * Reedem Reward
+ */
+router.post("/redeemReward/:id", roleVerifier(UserType.CHILD), controller.redeemReward);
+
 
 export default router;

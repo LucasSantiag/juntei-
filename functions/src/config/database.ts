@@ -3,6 +3,7 @@ import {Reward} from "../models/Reward";
 import {Task} from "../models/Task";
 import {TaskLineupRelation} from "../models/Task.Lineup";
 import {User} from "../models/User";
+import {Video} from "../models/Video";
 import {UserRelationship} from "../models/User.Relationship";
 
 const converter = <T>() => ({
@@ -24,4 +25,5 @@ export const db = {
   rewards: getFirestore().collection("rewards").withConverter(converter<Reward>()),
   tasks: getFirestore().collection("tasks").withConverter(converter<Task>()),
   taskLineup: getFirestore().collection("task-lineup").withConverter(converter<TaskLineupRelation>()),
+  video: getFirestore().collection("video").withConverter(converter<Video>()),
 };

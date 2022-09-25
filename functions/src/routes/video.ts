@@ -1,35 +1,35 @@
 import express, {Router} from "express";
-import controller from "../controllers/task";
+import controller from "../controllers/video";
 import {roleVerifier} from "../middleware/role.verifier";
 import {UserType} from "../models/User";
 
 const router: Router = express.Router();
 
 /**
- * Get all tasks avaiable
+ * Get all Videos avaiable
  */
 router.get("/", controller.getAllTasks);
 
 /**
- * Create a Task
+ * Create a Video
  * @Note Action PARENT restricted only
- * @Body { description: string, icon: string, deleted: boolean }
+ * @Body { url: string }
  */
 router.post("/", roleVerifier(UserType.PARENT), controller.create);
 
 /**
- * Update a Task
+ * Update a Video
  * @Note Action PARENT restricted only
- * @Body { description: string, icon: string, deleted: boolean }
+ * @Body { url: string }
  * @Params id: uid
  */
 router.put("/:id", roleVerifier(UserType.PARENT), controller.update);
 
 /**
- * Logical Task delete. Will not remove the document from database, only visibility
+ * Video delete.
  * @Note Action PARENT restricted only
  * @Params id: uid
  */
-router.delete("/:id", roleVerifier(UserType.PARENT), controller.deleteTask);
+router.delete("/:id", roleVerifier(UserType.PARENT), controller.deleteVideo);
 
 export default router;
