@@ -2,6 +2,7 @@ import {db} from "../config/database";
 import {LineupAlreadyExists} from "../models/Error";
 import {ConcludeRequest, TaskLineup, TaskLineupRequest, TaskStatus} from "../models/Task.Lineup";
 import userService from "../services/user";
+import historyService from "../services/history";
 import {mapRequest, getWeek, mapConclusion, mapTaskList, checkTask, approveById, declienById, mapTaskRequest} from "../utils/task.lineup";
 
 const findById = async (uid: string, id: string) => {
@@ -119,9 +120,13 @@ const create = async (req: TaskLineupRequest, uid: string) => {
 const approve = async (uid: string, id: string, weekId: string) => {
   const lineup = await findById(uid, weekId);
 
-  userService.updateBalance(uid, (await db.tasks
+  const task = await db.tasks
       .doc(id)
-      .get()).data()?.price!);
+      .get();
+
+  userService.updateBalance(uid, task.data()?.price!);
+
+  await historyService.saveTask(uid, task.data()!);
 
   return lineup.ref.update({
     taskLineup: approveById(lineup, id),

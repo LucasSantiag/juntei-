@@ -1,4 +1,4 @@
-import {TokenStatus, UserRequest} from "../models/User";
+import {TokenStatus, UserRequest, UserType} from "../models/User";
 import {db} from "../config/database";
 import {checkUser, checkUsersByToken, mapRequest, mapToken, mapUserList} from "../utils/user.utils";
 import userRelationshipService from "../services/user.relationship";
@@ -16,6 +16,24 @@ const find = async (uid: string) => {
 
   checkUser(user);
   return user;
+};
+
+const aggregateFind = async (uid: string) => {
+  const user = await db.users
+      .doc(uid)
+      .get();
+
+  checkUser(user);
+
+  if (user.data()?.role == UserType.CHILD) {
+    const lineup = await taskLineupService.findCurrentWeek2(uid);
+    const approvedBalance = await taskLineupService.getCurrentWeekApprovedBalance(uid);
+    const totalBalance = await taskLineupService.getCurrentWeekTotalBalance(uid);
+
+    return mapUserList(user, approvedBalance, totalBalance, lineup);
+  }
+
+  return user.data();
 };
 
 const findChilds = async (uid: string) => {
@@ -90,7 +108,7 @@ const updateBalance = async (uid: string, balance: number) => {
   const user = await find(uid);
   return user.ref
       .update({
-        balance: {balance: !user.data()?.balance ? balance : balance + user.data()?.balance!},
+        balance: !user.data()?.balance ? balance : balance + user.data()?.balance!,
       });
 };
 
@@ -100,6 +118,7 @@ export default {
   token,
   findByToken,
   find,
+  aggregateFind,
   updateTokenStatus,
   findChilds,
   updateBalance,

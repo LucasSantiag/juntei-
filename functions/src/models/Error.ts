@@ -90,3 +90,27 @@ export class LineupAlreadyExists extends BaseError {
   }
 }
 
+/**
+ * CustomError class Lineup wrong insertions
+ */
+export class NotEnoughBalance extends BaseError {
+  /**
+   * Lineup Error error constructor
+   */
+  constructor() {
+    super("NOT ENOUGH BALANCE TO REEDEEM REWARD", HttpStatusCode.BAD_REQUEST, "You Balance is too low");
+  }
+}
+
+/**
+ * CustomError class Lineup wrong insertions
+ */
+export class RewardNotValid extends BaseError {
+  /**
+   * Lineup Error error constructor
+   */
+  constructor() {
+    super("REWARD NOT VALID TO REEDEEM", HttpStatusCode.BAD_REQUEST, "This reward is not valid");
+  }
+}
+

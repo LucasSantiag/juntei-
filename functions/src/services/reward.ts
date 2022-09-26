@@ -3,6 +3,8 @@ import {RewardRequest} from "../models/Reward";
 import relationshipService from "../services/user.relationship";
 import {checkReward, mapRequestDefault} from "../utils/reward.utils";
 import userService from "../services/user";
+import {NotEnoughBalance, RewardNotValid} from "../models/Error";
+import historyService from "../services/history";
 
 /**
  * Get reward by id and validate if is related to user uid
@@ -53,16 +55,18 @@ const redeemReward = async (id: string, uid: string) => {
   const taskDb = await getById(id, uid);
   const user = await userService.find(uid);
 
-  const balance = user.data()?.balance ? 0 : user.data()!.balance;
-  const quantity = taskDb.data()?.quantity ? 0 : taskDb.data()!.quantity;
+  const balance = !user.data()?.balance ? 0 : user.data()!.balance;
+  const quantity = !taskDb.data()?.quantity ? 0 : taskDb.data()!.quantity;
 
   if (quantity <= 0) {
-    throw new Error("Not Allowed");
+    throw new RewardNotValid();
   }
 
-  if (balance - taskDb.data()!.price >= 0) {
-    throw new Error("Not Allowed");
+  if (balance - taskDb.data()!.price < 0) {
+    throw new NotEnoughBalance();
   }
+
+  await historyService.saveReward(uid, taskDb.data()!);
 
   await userService.updateBalance(uid, 0 - taskDb.data()?.price!)
       .then(() => taskDb.ref.update({quantity: quantity - 1}));

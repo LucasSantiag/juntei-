@@ -6,10 +6,10 @@ import {UserRequest} from "../models/User";
 const get = async (req: Request, res: Response, next: NextFunction) => {
   const uid = req.uid!;
 
-  service.find(uid)
+  service.aggregateFind(uid)
       .then((user) => {
         functions.logger.log("User get: ", req.uid);
-        res.status(200).send(user.data());
+        res.status(200).send(user);
       })
       .catch(next);
 };

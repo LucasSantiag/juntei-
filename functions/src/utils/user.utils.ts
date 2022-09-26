@@ -39,7 +39,9 @@ export const mapUserList = (user: FirebaseFirestore.DocumentSnapshot<User>, appr
     "avatar": user.data()?.avatar,
     "team": user.data()?.team,
     "position": user.data()?.position,
+    "role": user.data()?.role,
     "lineup": lineup,
+    "balance": user.data()?.balance,
     "totalBalance": totalBalance,
     "approvedBalance": approvedBalance,
   });

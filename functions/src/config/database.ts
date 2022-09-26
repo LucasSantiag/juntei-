@@ -5,6 +5,7 @@ import {TaskLineupRelation} from "../models/Task.Lineup";
 import {User} from "../models/User";
 import {Video} from "../models/Video";
 import {UserRelationship} from "../models/User.Relationship";
+import {History} from "../models/History";
 
 const converter = <T>() => ({
   toFirestore: (data: T) => data,
@@ -26,4 +27,5 @@ export const db = {
   tasks: getFirestore().collection("tasks").withConverter(converter<Task>()),
   taskLineup: getFirestore().collection("task-lineup").withConverter(converter<TaskLineupRelation>()),
   video: getFirestore().collection("video").withConverter(converter<Video>()),
+  history: getFirestore().collection("history").withConverter(converter<History>()),
 };

@@ -56,7 +56,7 @@ const redeemReward = async (req: Request, res: Response, next: NextFunction) => 
   const uid = req.uid!;
   const id = req.params.id;
 
-  service.redeemReward(uid, id)
+  service.redeemReward(id, uid)
       .then(() => {
         res.sendStatus(204);
       })

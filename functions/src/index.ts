@@ -14,7 +14,7 @@ import rewardRoute from "./routes/reward";
 import taskRoute from "./routes/task";
 import taskLineupRoute from "./routes/task.lineup";
 import videoRoute from "./routes/video";
-
+import historyRoute from "./routes/history";
 
 const app: Express = express();
 
@@ -27,6 +27,7 @@ app.use("/reward", rewardRoute);
 app.use("/task", taskRoute);
 app.use("/lineup", taskLineupRoute);
 app.use("/video", videoRoute);
+app.use("/history", historyRoute);
 
 
 app.use(errorHandler);
