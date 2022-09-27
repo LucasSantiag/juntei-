@@ -9,5 +9,5 @@ export interface History {
   description: string,
   price: number,
   icon: string,
-  date: Date,
+  date: string,
 }

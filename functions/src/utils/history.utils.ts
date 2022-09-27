@@ -1,3 +1,4 @@
+import {formatISO} from "date-fns";
 import {History, HistoryType} from "../models/History";
 import {Reward} from "../models/Reward";
 import {Task} from "../models/Task";
@@ -9,7 +10,7 @@ export const mapReward = (uid: string, reward: Reward) => {
     description: reward.description,
     icon: reward.icon,
     price: reward.price,
-    date: new Date,
+    date: formatISO(new Date),
   } as History;
 };
 
@@ -20,6 +21,6 @@ export const mapTask = (uid: string, task: Task) => {
     description: task.description,
     icon: task.icon,
     price: task.price,
-    date: new Date,
+    date: formatISO(new Date),
   } as History;
 };

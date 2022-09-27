@@ -89,6 +89,7 @@ export const approveById = (taskLineup: FirebaseFirestore.DocumentSnapshot<TaskL
         status: TaskStatus.APPROVED,
         description: taskId.description,
         mediaUrl: taskId.mediaUrl,
+        position: taskId.position,
       };
     } else {
       return taskId;
