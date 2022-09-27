@@ -13,6 +13,18 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       .catch(next);
 };
 
+const getParent = async (req: Request, res: Response, next: NextFunction) => {
+  const ui = req.params.id;
+
+  service.find(ui)
+      .then((history) => {
+        functions.logger.log("Get all rewards: ", req.uid);
+        res.status(200).send(history);
+      })
+      .catch(next);
+};
+
 export default {
   get,
+  getParent,
 };

@@ -121,12 +121,12 @@ const approve = async (uid: string, id: string, weekId: string) => {
   const lineup = await findById(uid, weekId);
 
   const task = await db.tasks
-      .doc(id)
+      .doc(lineup.data()?.taskLineup?.filter((idTaskLineup)=> id == idTaskLineup.id)[0].taskId!)
       .get();
 
-  userService.updateBalance(uid, task.data()?.price!);
+  userService.updateBalance(lineup.data()!.childId, task.data()?.price!);
 
-  await historyService.saveTask(uid, task.data()!);
+  await historyService.saveTask(lineup.data()!.childId, task.data()!);
 
   return lineup.ref.update({
     taskLineup: approveById(lineup, id),

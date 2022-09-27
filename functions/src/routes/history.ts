@@ -7,4 +7,6 @@ const router: Router = express.Router();
 
 router.get("/", roleVerifier(UserType.CHILD), controller.get);
 
+router.get("/:id", roleVerifier(UserType.PARENT), controller.get);
+
 export default router;

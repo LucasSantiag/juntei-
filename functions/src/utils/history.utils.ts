@@ -9,7 +9,7 @@ export const mapReward = (uid: string, reward: Reward) => {
     description: reward.description,
     icon: reward.icon,
     price: reward.price,
-    date: new Date().getDate(),
+    date: new Date,
   } as History;
 };
 
@@ -20,6 +20,6 @@ export const mapTask = (uid: string, task: Task) => {
     description: task.description,
     icon: task.icon,
     price: task.price,
-    date: new Date().getDate(),
+    date: new Date,
   } as History;
 };
