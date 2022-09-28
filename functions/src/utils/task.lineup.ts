@@ -106,6 +106,7 @@ export const declienById = (taskLineup: FirebaseFirestore.DocumentSnapshot<TaskL
         status: TaskStatus.DECLINED,
         description: taskId.description,
         mediaUrl: taskId.mediaUrl,
+        position: taskId.position,
       };
     } else {
       return taskId;

@@ -5,8 +5,8 @@ import {UserType} from "../models/User";
 
 const router: Router = express.Router();
 
-router.get("/", roleVerifier(UserType.CHILD), controller.get);
+router.get("/:id", roleVerifier(UserType.PARENT), controller.getParent);
 
-router.get("/:id", roleVerifier(UserType.PARENT), controller.get);
+router.get("/", roleVerifier(UserType.CHILD), controller.get);
 
 export default router;

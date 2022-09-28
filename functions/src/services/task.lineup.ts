@@ -124,7 +124,11 @@ const approve = async (uid: string, id: string, weekId: string) => {
       .doc(lineup.data()?.taskLineup?.filter((idTaskLineup)=> id == idTaskLineup.id)[0].taskId!)
       .get();
 
-  userService.updateBalance(lineup.data()!.childId, task.data()?.price!);
+  lineup.data()!.taskLineup!.map((taskId) => {
+    if (id == taskId.id && (taskId.status == TaskStatus.DONE || taskId.status == TaskStatus.DECLINED)) {
+      userService.updateBalance(lineup.data()!.childId, task.data()?.price!);
+    }
+  });
 
   await historyService.saveTask(lineup.data()!.childId, task.data()!);
 
@@ -135,6 +139,16 @@ const approve = async (uid: string, id: string, weekId: string) => {
 
 const decline = async (uid: string, id: string, weekId: string) => {
   const lineup = await findById(uid, weekId);
+
+  const task = await db.tasks
+      .doc(lineup.data()?.taskLineup?.filter((idTaskLineup)=> id == idTaskLineup.id)[0].taskId!)
+      .get();
+
+  lineup.data()!.taskLineup!.map((taskId) => {
+    if (id == taskId.id && taskId.status == TaskStatus.APPROVED) {
+      userService.updateBalance(lineup.data()!.childId, 0 - task.data()?.price!);
+    }
+  });
 
   return lineup.ref.update({
     taskLineup: declienById(lineup, id),
